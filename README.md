@@ -8,6 +8,13 @@ Download deps using:
 uv sync
 ```
 
+Run tests using:
+
+```bash
+uv run pytest
+```
+
+
 Check code using:
 
 ```bash
