@@ -5,7 +5,10 @@ description = ""
 readme = "README.md"
 # using 3.13 as fprime does not work with 3.14+ (yet) so maintain compat
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "astropy>=6",
+    "numpy>=2",
+]
 
 [project.scripts]
 satsim = "satsim:main"
