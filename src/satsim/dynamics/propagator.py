@@ -6,11 +6,11 @@ from satsim.environment.earth import Environment
 from satsim.types import StateVector, Vec3
 
 # force fn: (state, t, env) -> acceleration
-AccelFn = Callable[[StateVector, float, Environment], Vec3]
+AccelFn = Callable[[StateVector, np.float64, Environment], Vec3]
 
 
 def _deriv(
-    state: StateVector, t: float, accel_fn: AccelFn, env: Environment
+    state: StateVector, t: np.float64, accel_fn: AccelFn, env: Environment
 ) -> np.ndarray:
     # d/dt[pos, vel] = [vel, accel]
     a = accel_fn(state, t, env)
@@ -22,7 +22,7 @@ def _vec_to_state(arr: np.ndarray) -> StateVector:
 
 
 def rk4_step(
-    state: StateVector, t: float, dt: float, accel_fn: AccelFn, env: Environment
+    state: StateVector, t: np.float64, dt: np.float64, accel_fn: AccelFn, env: Environment
 ) -> StateVector:
     # samples 4 derivative estimates and takes a weighted avg; more accurate than Euler
     arr = np.concatenate([state.r, state.v])
@@ -36,13 +36,13 @@ def rk4_step(
 
 def propagate(
     state0: StateVector,
-    t_span: float,  # total simulation time, seconds
-    dt: float,  # step size, seconds
+    t_span: np.float64,  # total simulation time, seconds
+    dt: np.float64,  # step size, seconds
     force_fns: list[AccelFn],
     env: Environment,
-    reentry_alt_km: float = 80.0,  # stop if satellite drops below this altitude
+    reentry_alt_km: np.float64 = np.float64(80.0),  # stop if satellite drops below this altitude
 ) -> tuple[np.ndarray, list[StateVector]]:
-    def combined_accel(state: StateVector, t: float, env: Environment) -> Vec3:
+    def combined_accel(state: StateVector, t: np.float64, env: Environment) -> Vec3:
         return sum((f(state, t, env) for f in force_fns), np.zeros(3))
 
     n = int(t_span / dt)
