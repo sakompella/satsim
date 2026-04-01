@@ -14,9 +14,9 @@ class StateVector:
 
 @dataclass(frozen=True)
 class OrbitalElements:
-    a: float  # semi-major axis, km
-    e: float  # eccentricity
-    i: float  # inclination, rad
-    raan: float  # right ascension of ascending node, rad
-    argp: float  # argument of periapsis, rad
-    nu: float  # true anomaly, rad
+    a: np.float64  # semi-major axis, km
+    e: np.float64  # eccentricity
+    i: np.float64  # inclination, rad
+    raan: np.float64  # right ascension of ascending node, rad
+    argp: np.float64  # argument of periapsis, rad
+    nu: np.float64  # true anomaly, rad
