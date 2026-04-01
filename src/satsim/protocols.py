@@ -9,7 +9,9 @@ from satsim.types import StateVector, Vec3
 
 @runtime_checkable
 class ForceModel(Protocol):
-    def acceleration(self, state: StateVector, t: np.float64, env: Environment) -> Vec3: ...
+    def acceleration(
+        self, state: StateVector, t: np.float64, env: Environment
+    ) -> Vec3: ...
 
 
 @runtime_checkable

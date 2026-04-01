@@ -22,7 +22,11 @@ def _vec_to_state(arr: np.ndarray) -> StateVector:
 
 
 def rk4_step(
-    state: StateVector, t: np.float64, dt: np.float64, accel_fn: AccelFn, env: Environment
+    state: StateVector,
+    t: np.float64,
+    dt: np.float64,
+    accel_fn: AccelFn,
+    env: Environment,
 ) -> StateVector:
     # samples 4 derivative estimates and takes a weighted avg; more accurate than Euler
     arr = np.concatenate([state.r, state.v])
@@ -40,7 +44,9 @@ def propagate(
     dt: np.float64,  # step size, seconds
     force_fns: list[AccelFn],
     env: Environment,
-    reentry_alt_km: np.float64 = np.float64(80.0),  # stop if satellite drops below this altitude
+    reentry_alt_km: np.float64 = np.float64(
+        80.0
+    ),  # stop if satellite drops below this altitude
 ) -> tuple[np.ndarray, list[StateVector]]:
     def combined_accel(state: StateVector, t: np.float64, env: Environment) -> Vec3:
         return sum((f(state, t, env) for f in force_fns), np.zeros(3))
