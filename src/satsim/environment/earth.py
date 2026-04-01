@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from math import exp
 
 import astropy.time
+import numpy as np
 
 # piecewise exponential atmosphere - https://www.sciencedirect.com/science/article/pii/0032063372900991
 # (base_alt_km, density_kg_m3, scale_height_km)
@@ -43,28 +44,28 @@ _ATMO_ALTS = tuple(row[0] for row in _ATMO)
 class Environment:
     # WGS84 (standardized) constants - km, rad, s
     # https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84
-    mu: float = 398600.4418  # gravitational parameter, km^3/s^2
-    R_e: float = 6378.137  # equatorial radius, km
-    J2: float = 1.08262982131e-3  # second zonal harmonic
-    f: float = 1.0 / 298.257223563  # flattening
-    omega_e: float = 7.2921150e-5  # Earth rotation rate, rad/s
+    mu: np.float64 = np.float64(398600.4418)  # gravitational parameter, km^3/s^2
+    R_e: np.float64 = np.float64(6378.137)  # equatorial radius, km
+    J2: np.float64 = np.float64(1.08262982131e-3)  # second zonal harmonic
+    f: np.float64 = np.float64(1.0 / 298.257223563)  # flattening
+    omega_e: np.float64 = np.float64(7.2921150e-5)  # Earth rotation rate, rad/s
 
     # simulation clock
     epoch: astropy.time.Time = field(
         default_factory=lambda: astropy.time.Time("J2000", scale="tt")
     )
-    t: float = 0.0  # elapsed seconds since epoch
-    dt: float = 10.0  # default step size, s
+    t: np.float64 = np.float64(0.0)  # elapsed seconds since epoch
+    dt: np.float64 = np.float64(10.0)  # default step size, s
 
     @property
     def R_p(self):
         # polar radius, km
         return self.R_e * (1.0 - self.f)
 
-    def density(self, h_km):
+    def density(self, h_km) -> np.float64:
         # kg/m^3
         if h_km > 1000.0:
-            return 0.0
+            return np.float64(0.0)
         idx = bisect_right(_ATMO_ALTS, h_km) - 1
         h0, rho0, H = _ATMO[idx]
-        return rho0 * exp(-(h_km - h0) / H)
+        return np.float64(rho0 * exp(-(h_km - h0) / H))
